@@ -1,0 +1,63 @@
+certificateAuthorities:
+    org1.example.com:
+        tlsCACerts:
+            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp/tlscacerts/ca.crt
+        url: https://ca_org1:7054
+        grpcOptions:
+            ssl-target-name-override: org1.example.com
+        registrar:
+            enrollId: admin
+            enrollSecret: adminpw
+channels:
+    mychannel:
+        orderers:
+            - fabric_orderer
+        peers:
+            fabric_peer:
+                chaincodeQuery: true
+                endorsingPeer: true
+                eventSource: true
+                ledgerQuery: true
+client:
+    BCCSP:
+        security:
+            default:
+                provider: SW
+            enabled: true
+            hashAlgorithm: SHA2
+            level: 256
+            softVerify: true
+    credentialStore:
+        cryptoStore:
+            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
+        path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
+    cryptoconfig:
+        path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
+    logging:
+        level: info
+    organization: org1.example.com
+    tlsCerts:
+        client:
+            cert:
+                path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/cert.pem
+            key:
+                path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/FILL_IN_KEY_NAME_HERE
+orderers:
+    fabric_orderer:
+        tlsCACerts:
+            path: /etc/firefly/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/tlscacerts/tls-localhost-9054-ca-orderer.pem
+        url: grpcs://orderer.example.com:7050
+organizations:
+    org1.example.com:
+        certificateAuthorities:
+            - org1.example.com
+        cryptoPath: /tmp/msp
+        mspid: Org1MSP
+        peers:
+            - fabric_peer
+peers:
+    fabric_peer:
+        tlsCACerts:
+            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/tlscacerts/tls-localhost-7054-ca-org1.pem
+        url: grpcs://peer0.org1.example.com:7051
+version: 1.1.0%
