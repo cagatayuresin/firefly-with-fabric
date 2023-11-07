@@ -1,0 +1,7 @@
+# Add custom config overrides here
+# See https://docs.docker.com/compose/extends
+version: "2.1"
+networks:
+  default:
+    name: fabric_test
+    external: true

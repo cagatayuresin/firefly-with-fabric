@@ -1,12 +1,19 @@
 #!/bin/bash
 
+# https://hyperledger.github.io/firefly/tutorials/chains/fabric_test_network.html
+# https://hyperledger-fabric.readthedocs.io/en/release-2.5/getting_started.html
+
 # Lookup Table
 FABRIC_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
 
 # Config
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
+
+ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
+ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"
 
 # Standart initialization
 sudo apt update
@@ -15,7 +22,7 @@ sudo apt install unattended-upgrades -y
 sudo apt autoremove -y
 
 # Installation of essentials
-sudo apt install -y git curl docker-compose jq wget
+sudo apt install -y git docker-compose jq wget
 
 # Little Docker configuration
 sudo systemctl start docker
@@ -70,6 +77,7 @@ git clone https://github.com/hyperledger/firefly.git
 
 # Start Fabric test network
 cd fabric-samples/test-network
+sudo chmod +x network.sh
 ./network.sh up createChannel -ca
 
 # Deploy FireFly Chaincode
@@ -112,3 +120,34 @@ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride o
 
 # Getting CCP Templates
 cd ~
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/org1_ccp.yml
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/org2_ccp.yml
+
+echo -e "${GREEN}Please replace the string FILL_IN_KEY_NAME_HERE with these keys (ONLY KEY) in org1_ccp.yml and org2_ccp.yml${NC}"
+echo -e "${YELLOW}Org1 Key: $(ls "$ORG1_USER_KEYSTORE_DIR")${NC}"
+echo -e "${YELLOW}Org2 Key: $(ls "$ORG2_USER_KEYSTORE_DIR")${NC}"
+read -p "I am waiting... Did you do replacement? (Y/N) " answer
+if [[ $answer == "Y" ]]; then
+  echo -e "${GREEN}IN PROGRESS...${NC}"
+else
+  echo -e "${RED}ERROR: I cannot go on!${NC}"
+  exit 1
+fi
+
+cd ~/fabric-samples/test-network
+ff init fabric dev \
+  --ccp "${HOME}/org1_ccp.yml" \
+  --msp "organizations" \
+  --ccp "${HOME}/org2_ccp.yml" \
+  --msp "organizations" \
+  --channel mychannel \
+  --chaincode firefly
+
+cd ~/.firefly/stacks/dev/
+sudo rm docker-compose.override.yml
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/docker-compose.override.yml
+cd ~/fabric-samples/test-network
+
+echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
+sleep 5
+ff start dev --verbose --no-rollback
