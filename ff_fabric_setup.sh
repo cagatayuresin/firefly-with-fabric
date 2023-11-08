@@ -7,6 +7,7 @@
 FABRIC_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
 ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
 ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"
+ORDERER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/fabric-ca/ordererOrg/msp/keystore"
 
 # Config
 RED='\033[0;31m'
@@ -128,8 +129,8 @@ echo -e "${GREEN}Please replace the string FILL_IN_KEY_NAME_HERE with these keys
 echo -e "${YELLOW}Org1 Key: $(ls "$ORG1_USER_KEYSTORE_DIR")${NC}"
 echo -e "${YELLOW}Org2 Key: $(ls "$ORG2_USER_KEYSTORE_DIR")${NC}"
 # Waiting the user for key replacement
-read -p "I am waiting... Did you do replacement? (Y/N) " answer
-if [[ $answer == "Y" ]]; then
+read -p "I am waiting... Did you do replacement? (y/N) " answer
+if [[ $answer == "y" ]]; then
   echo -e "${GREEN}IN PROGRESS...${NC}"
 else
   echo -e "${RED}ERROR: I cannot go on!${NC}"
@@ -137,6 +138,7 @@ else
 fi
 
 # Initialization FireFly Fabric stack as dev
+sudo chmod 777 $ORDERER_KEYSTORE_DIR
 cd ~/fabric-samples/test-network
 ff init fabric dev --ccp "${HOME}/org1_ccp.yml" --msp "organizations" --ccp "${HOME}/org2_ccp.yml" --msp "organizations" --channel mychannel --chaincode firefly
 
