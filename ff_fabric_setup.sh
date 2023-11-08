@@ -76,6 +76,8 @@ git clone https://github.com/hyperledger/firefly.git
 # Start Fabric test network
 cd fabric-samples/test-network
 sudo chmod +x network.sh
+./network.sh down
+sleep 1
 ./network.sh up createChannel -ca
 
 # Deploy FireFly Chaincode
