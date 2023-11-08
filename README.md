@@ -1,8 +1,10 @@
 # FireFly with Fabric
 
-Hyperledger FireFly with Hyperledger Fabric installation script for test network.
+![Hyperledger](https://img.shields.io/badge/hyperledger-2F3134?style=for-the-badge&logo=hyperledger&logoColor=white)![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
 ***
+
+Hyperledger FireFly with Hyperledger Fabric installation script for test network.
 
 ```bash
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_setup.sh
@@ -11,6 +13,20 @@ curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/m
 ```bash
 sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
 ```
+
+***
+
+Hyperledger FireFly with Hyperledger Fabric deploying assetTransfer smartcontract script for test network.
+
+```bash
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_deploy_assettransfer.sh
+```
+
+```bash
+sudo chmod +x ff_fabric_deploy_assettransfer.sh && ./ff_fabric_deploy_assettransfer.sh
+```
+
+***
 
 ## LICENSE
 
