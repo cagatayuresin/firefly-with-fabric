@@ -10,10 +10,6 @@
 sudo apt update && sudo apt install curl -y
 ```
 
-```bash
-sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
-```
-
 ***
 
 ## Setup
