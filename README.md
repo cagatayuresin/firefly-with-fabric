@@ -4,17 +4,27 @@
 
 ***
 
-Hyperledger FireFly with Hyperledger Fabric installation script for test network.
+## Prerequisite
 
 ```bash
-curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_setup.sh
+sudo apt update && sudo apt install curl -y
 ```
+
+***
+
 
 ```bash
 sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
 ```
 
 ***
+
+```bash
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_deploy_assettransfer.sh
+```
+
+***
+
 
 Hyperledger FireFly with Hyperledger Fabric deploying assetTransfer smartcontract script for test network.
 
