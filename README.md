@@ -10,6 +10,14 @@
 sudo apt update && sudo apt install curl -y
 ```
 
+```bash
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/install_docker.sh
+```
+
+```bash
+sudo chmod +x install_docker.sh && ./install_docker.sh
+```
+
 ***
 
 ## Setup
