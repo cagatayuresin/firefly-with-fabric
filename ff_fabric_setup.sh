@@ -51,6 +51,7 @@ sudo systemctl start docker
 sudo systemctl enable docker
 sudo groupadd docker
 sudo usermod -aG docker $USER
+exec su -l $USER
 
 # Easy mod of go installation
 sudo snap install go --classic
