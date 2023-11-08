@@ -6,6 +6,8 @@
 
 # Lookup Table
 FABRIC_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
+ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
+ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"
 
 # Config
 RED='\033[0;31m'
@@ -13,8 +15,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
-ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"
+# Starting message
+echo -e "${GREEN}FireFly with Fabric || Setup is about to start in 5 seconds...${NC}"
+echo -e "${GREEN}to cancel CTRL+C${NC}"
+sleep 5
 
 # Standart initialization
 sudo apt update
@@ -164,12 +168,19 @@ ff init fabric dev \
   --channel mychannel \
   --chaincode firefly
 
+# Replace docker-compose.override.yml with edited version
 cd ~/.firefly/stacks/dev/
 sudo rm docker-compose.override.yml
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/docker-compose.override.yml
-cd ~/fabric-samples/test-network
 
+# Stop and remove dev stack on FireFly if it is exist
+cd ~/fabric-samples/test-network
+ff stop dev
+echo "y" | ff remove dev
+
+# Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
 sleep 5
+
 # Start FireFly Fabric stack that named dev
 ff start dev --verbose --no-rollback
