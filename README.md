@@ -10,8 +10,17 @@
 sudo apt update && sudo apt install curl -y
 ```
 
+```bash
+sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
+```
+
 ***
 
+## Setup
+
+```bash
+curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_setup.sh
+```
 
 ```bash
 sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
@@ -19,11 +28,7 @@ sudo chmod +x ff_fabric_setup.sh && ./ff_fabric_setup.sh
 
 ***
 
-```bash
-curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/ff_fabric_deploy_assettransfer.sh
-```
-
-***
+## Deploy
 
 Hyperledger FireFly with Hyperledger Fabric deploying assetTransfer smartcontract script for test network.
 
