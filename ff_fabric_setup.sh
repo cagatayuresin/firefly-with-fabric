@@ -49,7 +49,8 @@ sudo apt autoremove -y
 # Little Docker configuration
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo usermod -a -G docker "$USER"
+sudo groupadd docker
+sudo usermod -aG docker $USER
 
 # Easy mod of go installation
 sudo snap install go --classic
