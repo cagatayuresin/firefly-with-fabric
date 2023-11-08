@@ -138,13 +138,7 @@ fi
 
 # Initialization FireFly Fabric stack as dev
 cd ~/fabric-samples/test-network
-ff init fabric dev \
-  --ccp "${HOME}/org1_ccp.yml" \
-  --msp "organizations" \
-  --ccp "${HOME}/org2_ccp.yml" \
-  --msp "organizations" \
-  --channel mychannel \
-  --chaincode firefly
+ff init fabric dev --ccp "${HOME}/org1_ccp.yml" --msp "organizations" --ccp "${HOME}/org2_ccp.yml" --msp "organizations" --channel mychannel --chaincode firefly
 
 # Replace docker-compose.override.yml with edited version
 cd ~/.firefly/stacks/dev/
