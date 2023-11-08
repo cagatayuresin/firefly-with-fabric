@@ -25,7 +25,6 @@ curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/m
 
 ***
 
-
 Hyperledger FireFly with Hyperledger Fabric deploying assetTransfer smartcontract script for test network.
 
 ```bash
