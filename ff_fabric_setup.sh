@@ -5,8 +5,8 @@
 
 # Lookup Table
 FABRIC_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
-ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
-ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"
+ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
+ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
 ORDERER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/fabric-ca/ordererOrg/msp/keystore"
 
 # Config
@@ -137,8 +137,13 @@ else
   exit 1
 fi
 
+# Stop and remove dev stack on FireFly if it is exist
+cd ~/fabric-samples/test-network
+ff stop dev
+echo "y" | ff remove dev
+
 # Initialization FireFly Fabric stack as dev
-sudo chmod 777 $ORDERER_KEYSTORE_DIR
+sudo chmod -R 777 ~/fabric-samples/test-network/organizations
 cd ~/fabric-samples/test-network
 ff init fabric dev --ccp "${HOME}/org1_ccp.yml" --msp "organizations" --ccp "${HOME}/org2_ccp.yml" --msp "organizations" --channel mychannel --chaincode firefly
 
@@ -147,10 +152,6 @@ cd ~/.firefly/stacks/dev/
 sudo rm docker-compose.override.yml
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/docker-compose.override.yml
 
-# Stop and remove dev stack on FireFly if it is exist
-cd ~/fabric-samples/test-network
-ff stop dev
-echo "y" | ff remove dev
 
 # Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
