@@ -23,10 +23,13 @@ cd ..
 
 # Create deployment pack for assetTransfer
 rm asset_transfer.tar.gz asset_transfer.zip
+cd "~/fabric-samples/test-network"
 export PATH=${PWD}/../bin:$PATH
 export FABRIC_CFG_PATH=$PWD/../config/
-
-peer lifecycle chaincode package -p . --label asset_transfer ./asset_transfer.zip
+cd "~/fabric-samples/asset-transfer-basic/chaincode-go"
+peer lifecycle chaincode package -p . --label asset_transfer /asset_transfer.zip
+cp asset_transfer.zip ~/fabric-samples/test-network/asset_transfer.zip
+cd "~/fabric-samples/test-network"
 
 # Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
