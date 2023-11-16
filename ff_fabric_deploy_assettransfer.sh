@@ -5,12 +5,13 @@
 # Lookup Table
 FABRIC_TEST_NETWORK="$HOME/fabric-samples/test-network"
 ORGANIZATIONS="$FABRIC_TEST_NETWORK/organizations"
+FABRIC_BINS=$HOME/fabric-sambles/bin
 
 # Config
 GREEN='\033[0;32m'
 NC='\033[0m'
-export PATH="$PATH:$HOME/fabric-samples/bin"
-export FABRIC_CFG_PATH=$FABRIC_TEST_NETWORK/../config/
+export PATH="$PATH:$FABRIC_BINS"
+export FABRIC_CFG_PATH=$HOME/fabric-samples/config/
 export CORE_PEER_TLS_ENABLED=true
 
 # Starting message
@@ -46,7 +47,7 @@ export CORE_PEER_MSPCONFIGPATH=$ORGANIZATIONS/peerOrganizations/org2.example.com
 export CORE_PEER_ADDRESS=localhost:9051
 
 peer lifecycle chaincode install asset_transfer.zip
-
+echo $(peer lifecycle chaincode queryinstalled --output json | jq --raw-output ".installed_chaincodes")
 export CC_PACKAGE_ID=$(peer lifecycle chaincode queryinstalled --output json | jq --raw-output ".installed_chaincodes[1].package_id")
 
 peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"

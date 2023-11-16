@@ -10,6 +10,7 @@ FIREFLY_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/downlo
 ORG1_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
 ORG2_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
 ORDERER_KEYSTORE_DIR="$ORGANIZATIONS/fabric-ca/ordererOrg/msp/keystore"
+FABRIC_BINS=$HOME/fabric-sambles/bin
 
 # Config
 RED='\033[0;31m'
@@ -38,7 +39,7 @@ curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/ins
 ./install-fabric.sh docker samples binary # Installing Fabric requirements
 
 # Check if it's OK
-export PATH="$PATH:$HOME/fabric-samples/bin"
+export PATH="$PATH:$FABRIC_BINS"
 if command -v peer &> /dev/null; then
     echo -e "${GREEN}Fabric binaries successfully installed!${NC}"
 else
