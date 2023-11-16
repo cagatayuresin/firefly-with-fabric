@@ -2,9 +2,16 @@
 
 # https://hyperledger.github.io/firefly/tutorials/custom_contracts/fabric.html
 
+# Lookup Table
+FABRIC_TEST_NETWORK="$HOME/fabric-samples/test-network"
+ORGANIZATIONS="$FABRIC_TEST_NETWORK/organizations"
+
 # Config
 GREEN='\033[0;32m'
 NC='\033[0m'
+export PATH="$PATH:$HOME/fabric-samples/bin"
+export FABRIC_CFG_PATH=$FABRIC_TEST_NETWORK/../config/
+export CORE_PEER_TLS_ENABLED=true
 
 # Starting message
 echo -e "${GREEN}FireFly with Fabric || AssetTransfer deploying is about to start in 5 seconds...${NC}"
@@ -12,7 +19,7 @@ echo -e "${GREEN}to cancel CTRL+C${NC}"
 sleep 5
 
 # Create core.yml
-cd ${HOME}/fabric-samples/asset-transfer-basic/chaincode-go
+cd $HOME/fabric-samples/asset-transfer-basic/chaincode-go
 touch core.yaml
 
 # Replace smartcontract.go with edited version
@@ -22,14 +29,39 @@ curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/m
 cd ..
 
 # Create deployment pack for assetTransfer
-rm asset_transfer.tar.gz asset_transfer.zip
-cd "${HOME}/fabric-samples/test-network"
-export PATH=${PWD}/../bin:$PATH
-export FABRIC_CFG_PATH=$PWD/../config/
-cd "${HOME}/fabric-samples/asset-transfer-basic/chaincode-go"
-peer lifecycle chaincode package -p . --label asset_transfer /asset_transfer.zip
-cp asset_transfer.zip ${HOME}/fabric-samples/test-network/asset_transfer.zip
-cd "${HOME}/fabric-samples/test-network"
+cd "$HOME/fabric-samples/asset-transfer-basic/chaincode-go"
+GO111MODULE=on go mod vendor
+cd $FABRIC_TEST_NETWORK
+peer lifecycle chaincode package -p $HOME/fabric-samples/asset-transfer-basic/chaincode-go/ --label asset_transfer /asset_transfer.zip
+cp asset_transfer.zip $FABRIC_TEST_NETWORK/asset_transfer.zip
+cd $FABRIC_TEST_NETWORK
+
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051
+
+peer lifecycle chaincode install asset_transfer.zip
+
+export CORE_PEER_LOCALMSPID="Org2MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=$ORGANIZATIONS/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=$ORGANIZATIONS/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+export CORE_PEER_ADDRESS=localhost:9051
+
+peer lifecycle chaincode install asset_transfer.zip
+
+export CC_PACKAGE_ID=$(peer lifecycle chaincode queryinstalled --output json | jq --raw-output ".installed_chaincodes[1].package_id")
+
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_MSPCONFIGPATH=$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_ADDRESS=localhost:7051
+
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
 
 # Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"

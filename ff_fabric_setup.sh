@@ -4,10 +4,12 @@
 # https://hyperledger-fabric.readthedocs.io/en/release-2.5/getting_started.html
 
 # Lookup Table
+FABRIC_TEST_NETWORK="$HOME/fabric-samples/test-network"
+ORGANIZATIONS="$FABRIC_TEST_NETWORK/organizations"
 FIREFLY_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
-ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
-ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
-ORDERER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/fabric-ca/ordererOrg/msp/keystore"
+ORG1_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
+ORG2_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
+ORDERER_KEYSTORE_DIR="$ORGANIZATIONS/fabric-ca/ordererOrg/msp/keystore"
 
 # Config
 RED='\033[0;31m'
@@ -53,14 +55,14 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}The FireFly CLI pack has been downloaded successfully.${NC}"
 else
     echo -e "${RED}ERROR: FireFly CLI pack could not be downloaded!${NC}"
-    cd ~
+    cd $HOME
     exit 1
 fi
 
 # Unpack FireFly then add PATH
 sudo tar -zxf firefly-cli_*.tar.gz -C /usr/local/bin ff
 rm firefly-cli_*.tar.gz
-cd ~
+cd $HOME
 
 # Check if it's OK
 ff version
@@ -82,12 +84,11 @@ sleep 1
 ./network.sh up createChannel -ca
 
 # Deploy FireFly Chaincode
-cd ../../firefly/smart_contracts/fabric/firefly-go
+cd $HOME/firefly/smart_contracts/fabric/firefly-go
 GO111MODULE=on go mod vendor
-cd ../../../../fabric-samples/test-network
+cd $FABRIC_TEST_NETWORK
 
-export PATH=${PWD}/../bin:$PATH
-export FABRIC_CFG_PATH=$PWD/../config/
+export FABRIC_CFG_PATH=$FABRIC_TEST_NETWORK/../config/
 
 peer lifecycle chaincode package firefly.tar.gz --path ../../firefly/smart_contracts/fabric/firefly-go --lang golang --label firefly_1.0
 
@@ -120,7 +121,7 @@ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameO
 peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name firefly --version 1.0 --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
 
 # Getting CCP Templates
-cd ~
+cd $HOME
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/org1_ccp.yml
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/org2_ccp.yml
 
@@ -138,17 +139,17 @@ else
 fi
 
 # Stop and remove dev stack on FireFly if it is exist
-cd ~/fabric-samples/test-network
+cd $FABRIC_TEST_NETWORK
 ff stop dev
 echo "y" | ff remove dev
 
 # Initialization FireFly Fabric stack as dev
-sudo chmod -R 777 ~/fabric-samples/test-network/organizations
-cd ~/fabric-samples/test-network
-ff init fabric dev --ccp "${HOME}/org1_ccp.yml" --msp "organizations" --ccp "${HOME}/org2_ccp.yml" --msp "organizations" --channel mychannel --chaincode firefly
+sudo chmod -R 777 $FABRIC_TEST_NETWORK
+cd $FABRIC_TEST_NETWORK
+ff init fabric dev --ccp "$HOME/org1_ccp.yml" --msp "organizations" --ccp "$HOME/org2_ccp.yml" --msp "organizations" --channel mychannel --chaincode firefly
 
 # Replace docker-compose.override.yml with edited version
-cd ~/.firefly/stacks/dev/
+cd $HOME/.firefly/stacks/dev/
 sudo rm docker-compose.override.yml
 curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/main/docker-compose.override.yml
 
