@@ -50,16 +50,16 @@ peer lifecycle chaincode install asset_transfer.zip
 echo $(peer lifecycle chaincode queryinstalled --output json | jq --raw-output ".installed_chaincodes")
 export CC_PACKAGE_ID=$(peer lifecycle chaincode queryinstalled --output json | jq --raw-output ".installed_chaincodes[1].package_id")
 
-peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
 export CORE_PEER_LOCALMSPID="Org1MSP"
 export CORE_PEER_MSPCONFIGPATH=$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 export CORE_PEER_ADDRESS=localhost:7051
 
-peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
-peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --sequence 2 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name asset_transfer --version 1.0 --sequence 1 --tls --cafile "$ORGANIZATIONS/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "$ORGANIZATIONS/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
 
 # Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
