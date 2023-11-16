@@ -161,3 +161,5 @@ sleep 5
 
 # Start FireFly Fabric stack that named dev
 ff start dev --verbose --no-rollback
+
+exit 1
