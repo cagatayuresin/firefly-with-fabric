@@ -31,9 +31,7 @@ cd ..
 # Create deployment pack for assetTransfer
 cd "$HOME/fabric-samples/asset-transfer-basic/chaincode-go"
 GO111MODULE=on go mod vendor
-cd $FABRIC_TEST_NETWORK
-peer lifecycle chaincode package -p $HOME/fabric-samples/asset-transfer-basic/chaincode-go/ --label asset_transfer /asset_transfer.zip
-cp asset_transfer.zip $FABRIC_TEST_NETWORK/asset_transfer.zip
+peer lifecycle chaincode package -p $HOME/fabric-samples/asset-transfer-basic/chaincode-go/ --label asset_transfer $HOME/asset_transfer.zip
 cd $FABRIC_TEST_NETWORK
 
 export CORE_PEER_LOCALMSPID="Org1MSP"
