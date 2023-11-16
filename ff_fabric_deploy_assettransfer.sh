@@ -29,7 +29,6 @@ curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/m
 cd ..
 
 # Create deployment pack for assetTransfer
-cd "$HOME/fabric-samples/asset-transfer-basic/chaincode-go"
 GO111MODULE=on go mod vendor
 peer lifecycle chaincode package -p $HOME/fabric-samples/asset-transfer-basic/chaincode-go/ --label asset_transfer $HOME/asset_transfer.zip
 cd $FABRIC_TEST_NETWORK
