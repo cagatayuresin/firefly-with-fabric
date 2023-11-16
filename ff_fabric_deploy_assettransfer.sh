@@ -22,7 +22,10 @@ curl -sSLO https://raw.githubusercontent.com/cagatayuresin/firefly-with-fabric/m
 cd ..
 
 # Create deployment pack for assetTransfer
-rm asset_transfer.zip
+rm asset_transfer.tar.gz asset_transfer.zip
+export PATH=${PWD}/../bin:$PATH
+export FABRIC_CFG_PATH=$PWD/../config/
+
 peer lifecycle chaincode package -p . --label asset_transfer ./asset_transfer.zip
 
 # Starting message

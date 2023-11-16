@@ -41,6 +41,7 @@ client:
             cert:
                 path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/cert.pem
             key:
+                # path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/FILL_IN_KEY_NAME_HERE
                 path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/FILL_IN_KEY_NAME_HERE
 orderers:
     fabric_orderer:

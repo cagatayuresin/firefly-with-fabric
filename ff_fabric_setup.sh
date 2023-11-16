@@ -4,7 +4,7 @@
 # https://hyperledger-fabric.readthedocs.io/en/release-2.5/getting_started.html
 
 # Lookup Table
-FABRIC_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
+FIREFLY_CLI_PACK_URL="https://github.com/hyperledger/firefly-cli/releases/download/v1.2.2/firefly-cli_1.2.2_Linux_x86_64.tar.gz"
 ORG1_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
 ORG2_USER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
 ORDERER_KEYSTORE_DIR="$HOME/fabric-samples/test-network/organizations/fabric-ca/ordererOrg/msp/keystore"
@@ -48,7 +48,7 @@ fi
 cd Downloads
 
 # Check if it's OK
-wget "$FABRIC_CLI_PACK_URL"
+wget "$FIREFLY_CLI_PACK_URL"
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}The FireFly CLI pack has been downloaded successfully.${NC}"
 else
