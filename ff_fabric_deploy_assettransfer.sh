@@ -12,7 +12,7 @@ echo -e "${GREEN}to cancel CTRL+C${NC}"
 sleep 5
 
 # Create core.yml
-cd ~/fabric-samples/asset-transfer-basic/chaincode-go
+cd ${HOME}/fabric-samples/asset-transfer-basic/chaincode-go
 touch core.yaml
 
 # Replace smartcontract.go with edited version
@@ -23,13 +23,13 @@ cd ..
 
 # Create deployment pack for assetTransfer
 rm asset_transfer.tar.gz asset_transfer.zip
-cd "~/fabric-samples/test-network"
+cd "${HOME}/fabric-samples/test-network"
 export PATH=${PWD}/../bin:$PATH
 export FABRIC_CFG_PATH=$PWD/../config/
-cd "~/fabric-samples/asset-transfer-basic/chaincode-go"
+cd "${HOME}/fabric-samples/asset-transfer-basic/chaincode-go"
 peer lifecycle chaincode package -p . --label asset_transfer /asset_transfer.zip
-cp asset_transfer.zip ~/fabric-samples/test-network/asset_transfer.zip
-cd "~/fabric-samples/test-network"
+cp asset_transfer.zip ${HOME}/fabric-samples/test-network/asset_transfer.zip
+cd "${HOME}/fabric-samples/test-network"
 
 # Starting message
 echo -e "${GREEN}If everything seems ok the FireFly stack is going to start in 5 seconds.${NC}"
